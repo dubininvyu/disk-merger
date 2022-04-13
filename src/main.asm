@@ -1,58 +1,58 @@
 .386
 
 ; ========== constants
-BOOT_RECORD				EQU	446			; offset (to Partition Table or Extended Partition Table)
+BOOT_RECORD				EQU	446				; offset (to Partition Table or Extended Partition Table)
 
-DSCR_SIZE				EQU 10h			; descriptor size
-DSCR_COUNT				EQU	04h			; number of descriptors in MBR-sector
+DSCR_SIZE				EQU 10h				; descriptor size
+DSCR_COUNT				EQU	04h				; number of descriptors in MBR-sector
 
-DSCR_F_CHS_END			EQU	05h			; field CHS-Ending
-DSCR_F_CODE				EQU	04h			; field System Code
-DSCR_F_BEGIN			EQU 08h			; field LBA-Beginning
-DSCR_F_SIZE				EQU	0Ch			; filed size (in sectors)
+DSCR_F_CHS_END			EQU	05h				; field CHS-Ending
+DSCR_F_CODE				EQU	04h				; field System Code
+DSCR_F_BEGIN			EQU 08h				; field LBA-Beginning
+DSCR_F_SIZE				EQU	0Ch				; filed size (in sectors)
 
-DSCR_F2_REL				EQU 18h			; field Offset to the next EPR
-DSCR_F2_CODE			EQU 14h			; field System code in the second descriptor
+DSCR_F2_REL				EQU 18h				; field Offset to the next EPR
+DSCR_F2_CODE			EQU 14h				; field System code in the second descriptor
 
 ; ========== data segment
 dseg segment use16
-	sector1				db	512 dup (0)	; space for sector
-	sector2				db	512 dup (0)	; space for sector
+	sector1				db	512 dup (0)		; space for sector
+	sector2				db	512 dup (0)		; space for sector
 	
-	; пакет дискового адреса
-	packet				db	16			; packet size
-						db	0			;
-	packet_sec_count	db	1			; number of sectors for reading
-						db	0			;
-	packet_dest			dw	0			; address of storing area
-						dw	dseg		; segment register (from/into)
-	packet_lba			dq	0			; sector's number (LBA)
+	; packet
+	packet				db	16				; packet size
+						db	0				;
+	packet_sec_count	db	1				; number of sectors for reading
+						db	0				;
+	packet_dest			dw	0				; address of storing area
+						dw	dseg			; segment register (from/into)
+	packet_lba			dq	0				; sector's number (LBA)
 
-	; вывод количества LD`
+	; output number of logical disks
 	msg_ld_count		db	0Dh, 0Ah, 'Enter first LD for merging: 01 ..  '
-	ld_count_ascii		db, ' ', '- 1 : $'
+	ld_count_ascii		db	' ', '- 1 : $'
 
-	; ввод номера LD для объединения
+	; enter logical disk's number for merging
 	input_ld			db	3, 4 dup (0)	; logical disk number (2 symbols) + Enter (1 symbol)
 
-	; фиксированные
-	hd_number			db	0			; hard disk number
-	ld_number			db	0			; logical disk number
-	ld_count			db	0			; number of logical disks in Extended Partition
-	lba_list			dd	23 dup (0)	; array of beginning of EPRs (LBA coordinates)
+	; others
+	hd_number			db	0				; hard disk number
+	ld_number			db	0				; logical disk number
+	ld_count			db	0				; number of logical disks in Extended Partition
+	lba_list			dd	23 dup (0)		; array of beginning of EPRs (LBA coordinates)
 
-	; текстовые сообщения
-	msg_usage			db	0Dh, 0Ah, 'Usage: <HD number: 0..3>$'
+	; messages
+	msg_usage			db	0Dh, 0Ah,	'Usage: <HD number: 0..3>$'
 	
-	msg_success			db	0Dh, 0Ah, 'Your logical disks were merged$'
+	msg_success			db	0Dh, 0Ah,	'Your logical disks were merged$'
 	
-	msg_err_r_sector	db	0Dh, 0Ah, 'Invalid sector reading$'
-	msg_err_w_sector	db	0Dh, 0Ah, 'Invalid sector writing$'
-	msg_err_wrong_ld	db	0Dh, 0Ah, 'Invalid logical disk number$'
-	msg_err_no_2ld		db	0Dh, 0Ah, 'There are no 2 logical disks$'
-	msg_err_diff_code	db	0Dh, 0Ah, 'Your logical disks have diff FS$'
+	msg_err_r_sector	db	0Dh, 0Ah,	'Invalid sector reading$'
+	msg_err_w_sector	db	0Dh, 0Ah,	'Invalid sector writing$'
+	msg_err_wrong_ld	db	0Dh, 0Ah,	'Invalid logical disk number$'
+	msg_err_no_2ld		db	0Dh, 0Ah,	'There are no 2 logical disks$'
+	msg_err_diff_code	db	0Dh, 0Ah,	'Your logical disks have diff FS$'
 	
-	msg_err_no_epart	db	0Dh, 0Ah, 'This HD has no extended partition$'
+	msg_err_no_epart	db	0Dh, 0Ah,	'This HD has no extended partition$'
 dseg ends
 
 ; ========== error handling macros
