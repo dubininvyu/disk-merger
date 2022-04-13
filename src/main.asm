@@ -50,23 +50,23 @@ dseg segment use16
     msg_err_w_sector        db      0Dh, 0Ah, 'Invalid sector writing$'
     msg_err_wrong_ld        db      0Dh, 0Ah, 'Invalid logical disk number$'
     msg_err_no_2ld          db      0Dh, 0Ah, 'There are no 2 logical disks$'
-    msg_err_diff_code       db      0Dh, 0Ah, 'Your logical disks have diff FS$'
+    msg_err_diff_code       db      0Dh, 0Ah, 'Your logical disks have different fyle systems$'
     
     msg_err_no_epart        db      0Dh, 0Ah, 'This HD has no extended partition$'
 dseg ends
 
 ; ========== error handling macros
-throw MACRO message                 ; unconditional jump
+throw MACRO message                         ; unconditional jump
     lea DX, message
     jmp cs_end
 endm
 
-throw_c MACRO message               ; jump if CF = 1
+throw_c MACRO message                       ; jump if CF = 1
     lea DX, message
     jc cs_end
 endm
 
-throw_e MACRO message               ; jump if ZF = 1
+throw_e MACRO message                       ; jump if ZF = 1
     lea DX, message
     jz cs_end
 endm
@@ -79,7 +79,7 @@ read_sector MACRO drive, packet, message
     
     int 13h
     
-    throw_c message                 ; call throw_c macro
+    throw_c message                         ; call throw_c macro
 endm
 
 ; ========== code segment
@@ -90,17 +90,17 @@ start:
     mov DS, AX
     
 ; ========== getting and processing a parameter
-    mov AL, ES:[82h]                ; select a byte following the space (81h + 1)
-    call ascii_to_hex_hd            ; convert this parameter into hex and write into DS:SI (or CF = 1)
+    mov AL, ES:[82h]                        ; select a byte following the space (81h + 1)
+    call ascii_to_hex_hd                    ; convert this parameter into hex and write into DS:SI (or CF = 1)
 
-    throw_c DS:msg_usage            ; error if CF = 1
+    throw_c DS:msg_usage                    ; error if CF = 1
     
-    mov DS:hd_number, AL            ; save the HD number if there's no an error
+    mov DS:hd_number, AL                    ; save the HD number if there's no an error
     
 ; ========== MBR-sector reading
     lea DI, sector1
-    mov DS:packet_dest, DI          ; sector storing destination
-    mov dword ptr DS:packet_lba, 0  ; LBA number of sector
+    mov DS:packet_dest, DI                  ; sector storing destination
+    mov dword ptr DS:packet_lba, 0          ; LBA number of sector
     
     read_sector DS:hd_number, packet, DS:msg_err_r_sector        
     
@@ -108,14 +108,14 @@ start:
     lea SI, sector1
     call find_extended
     
-    throw_c DS:msg_err_no_epart     ; there's no extended partition
-    
-    mov EAX, DS:[SI+DSCR_F_BEGIN]   ; moving sector's number with EPR1 (LBA) in EAX
-    mov dword ptr DS:lba_list, EAX  ; saving sector's number with the beginning of extended partition
+    throw_c DS:msg_err_no_epart             ; there's no extended partition
+            
+    mov EAX, DS:[SI+DSCR_F_BEGIN]           ; moving sector's number with EPR1 (LBA) in EAX
+    mov dword ptr DS:lba_list, EAX          ; saving sector's number with the beginning of extended partition
 
 ; ========== looking for logical disks in an extended partition
-    mov BP, 0                       ; address of sector in lba_list (offset)
-    mov BX, BOOT_RECORD             ; go to Partition table (446 bytes)
+    mov BP, 0                               ; address of sector in lba_list (offset)
+    mov BX, BOOT_RECORD                     ; go to Partition table (446 bytes)
     
     ; address (destination) for storing sector
     lea DI, sector1                            
@@ -362,7 +362,7 @@ athl_end:
     mov AL, BL                              ; copying the number in AL
 
 htal_cycle:
-    xor AH, AH    ; clear AH
+    xor AH, AH    							; clear AH
     div BH
     add AH, 30h
     mov DS:SI, AH
