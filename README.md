@@ -195,10 +195,14 @@ Parameters:
 
 # Examples
 According to the MSDOS operating system's internal disk manager, `fdisk`, the hard disk 1 has two partitions: a primarity partition (1) and an extended partition (2).
-![image](https://user-images.githubusercontent.com/37341526/163341297-02f7aa2b-dfc7-4ac5-96f5-027c3ee18064.png)
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/37341526/163341297-02f7aa2b-dfc7-4ac5-96f5-027c3ee18064.png" alt="Image" />
+</p>
 
 Four logical disks are created in the extended partition:
-![image](https://user-images.githubusercontent.com/37341526/163341335-4bd8e040-0ee8-41fc-b5c2-9b1045df15b0.png)
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/37341526/163341335-4bd8e040-0ee8-41fc-b5c2-9b1045df15b0.png" alt="Image" />
+</p>
 
 1. `E` - the logical drive is 133 MB in size.
 2. `F` - the logical drive is 133 MB in size.
@@ -206,13 +210,21 @@ Four logical disks are created in the extended partition:
 4. `H` - the logical drive is 133 MB in size.
 
 When starting the utility from the command line, you must set the parameter - the number of the hard disk (1).
-![image](https://user-images.githubusercontent.com/37341526/163341469-fe00cb2d-7be3-4896-a3ae-239677cc1d9c.png)
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/37341526/163341469-fe00cb2d-7be3-4896-a3ae-239677cc1d9c.png" alt="Image" />
+</p>
 
 When the utility determines the number of logical disks in the extended partition, the user will be prompted to choose which of the logical disks he wants to merge with the next.
-![image](https://user-images.githubusercontent.com/37341526/163341593-befd849e-7e66-4ee0-9f0b-92d8191a32b0.png)
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/37341526/163341593-befd849e-7e66-4ee0-9f0b-92d8191a32b0.png" alt="Image" />
+</p>
 
 After merging the logical disks, the user receives a text message on the screen.
-![image](https://user-images.githubusercontent.com/37341526/163341613-a4df84fc-23fe-4ad2-952a-f2f004ee342f.png)
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/37341526/163341613-a4df84fc-23fe-4ad2-952a-f2f004ee342f.png" alt="Image" />
+</p>
 
 In the internal disk manager `fdisk` users can see how all the changes are now displayed.
-![image](https://user-images.githubusercontent.com/37341526/163342228-da2b89b9-62d8-4b3e-9eb7-5ffef029ffc1.png)
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/37341526/163342228-da2b89b9-62d8-4b3e-9eb7-5ffef029ffc1.png" alt="Image" />
+</p>
