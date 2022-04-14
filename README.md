@@ -1,5 +1,5 @@
 # disk-merger
-A 16-bits x86 DOS Assembly console tool for merging two contiguous logical disks in an extended partition. 
+A 16-bits x86 DOS Assembly console utility for merging two contiguous logical disks in an extended partition. 
 
 # Theoretical basis
 The first sector of physical hard drive, called the Master Boot Record (MBR) sector, contains the system Partition Table structure, which contains information about the created partitions.
