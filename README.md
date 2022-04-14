@@ -53,6 +53,30 @@ Assembler program development was performed in such a development environment as
 Assembler program debugging was performed in such a debugging environment as Borland Turbo Assembler (TASM) - Borland software package designed to develop assembly language programs for x86 architecture.
 
 # Using the utility
+The program is started from the command line. The program name is followed by one input parameter - the number of the hard disk drive to be operated (the input parameter is a number in decimal form from 0 to 3 inclusive). The program translates the entered number in decimal to hexadecimal and checks if the data is correct. If the data entered is incorrect, the user is prompted for a `Usage: HD number: 0...3` and program execution stops.
+
+The program attempts to read the MBR sector of the hard disk drive entered. If that fails the user receives an error message on the screen: `Invalid sector reading` and program execution stops.
+
+After a successful reading of the MBR sector, the program looks for the extended partition in the Partition Table. If there is no extended partition in the Partition Table, you will see an error message: `This HD has no extended partition` and the program stops executing.
+
+If an entry of an extended partition is found in the Partition Table, the program "runs" through all Logical Disk Patterns (EPR) created in the extended partition and fills in an array with sector CHS-coordinates of those tables while counting the number of such found tables. If the number of logical disks in an extended partition is less than two, the user will see an error message: `There are no 2 logical disks`, and the program stops executing
+
+Also, during the process of searching for logical disks in the extended partition, a sector reading error may occur - in this case the user will receive an `Invalid sector reading` error message on the screen and the program will abort.
+
+In case the program finds two or more logical disks in an extended partition, it will prompt the user to enter the number of the first logical disk to be merged (it will be merged with the next one) in decimal notation. The program prompts you with a range of existing logical disk numbers. For example, if you have created 4 logical disks in the extended partition, the program will report this as follows: `Enter first LD for merging: 1 – 4`.
+
+After the user has entered the data, the program will check if the entered data is correct and if the logical discs can be merged. The number you have entered should be in the range `1...N-1`, where `N` is the number of logical disks in the extended partition. If you enter an invalid logical disk number for combination, you will receive an error message on the screen: `Invalid logical disk number`.
+
+As for the possibility of combining the selected logical disks, they should be with the same file system. In case the selected logical disks have different file systems, the user receives an error text: `Your logical disks have different file system`. In both cases the program will crash.
+After receiving complete and correct information from the user, the program reads the two selected sectors to be merged into memory.
+
+1. Increases the size of the first logical disk the size of the second logical disk and by the offset from the EPR of the second logical disk to the beginning of the disk itself.
+2. Copies the CHS-coordinates of the end of the second logical disk in place of the CHS-coordinates of the end of the first logical disk.
+3. Copies the second descriptor of the EPR table of the second logical disk in place of the second descriptor of the EPR table of the first logical disk.
+
+When the above procedures are completed, the program writes the modified EPR sector of the first logical drive to the hard disk. If there are writing errors, the user gets an error text on the screen: `Invalid sector writing` and the program is interrupted.
+
+Finally if the program succeeds the user receives a message on the screen: `Your logical disks were merged` and then the program stops.
 
 # Program structure
 
